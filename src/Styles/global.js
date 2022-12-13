@@ -60,5 +60,30 @@ body{
     color: red;
 }
 
+.current{
+    border-left: 1px solid;
+    animation: blinkingLeft 2s infinite;
+    animation-timing-function: ease;
+    @keyframes blinkingLeft{
+        0% {border-left-color:white;}
+        25% {border-left-color:black;}
+        50% {border-left-color:white;}
+        75% {border-left-color:black;}
+        100% {border-left-color:white;}
+    }
+}
+
+.right-current{
+    border-right: 1px solid;
+    animation: blinkingRight 2s infinite;
+    animation-timing-function: ease;
+    @keyframes blinkingRight{
+        0% {border-right-color:white;}
+        25% {border-right-color:black;}
+        50% {border-right-color:white;}
+        75% {border-right-color:black;}
+        100% {border-right-color:white;}
+    }
+}
 
 `;
