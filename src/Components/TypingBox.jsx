@@ -27,6 +27,9 @@ const TypingBox = ({words}) => {
             }
             else{
                 //cursor in between
+                for(let i=currCharIndex;i<allChildSpans.length;i++){
+                    allChildSpans[i].className+=' skipped';
+                }
                 allChildSpans[currCharIndex].className = allChildSpans[currCharIndex].className.replace('current','');
 
             }

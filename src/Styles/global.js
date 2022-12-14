@@ -8,8 +8,8 @@ export const GlobalStyles = createGlobalStyle`
 }
 
 body{
-    background: black;
-    color: white;
+    background:${({theme})=>theme.background};
+    color: ${({theme})=>theme.title};
     padding:0;
     margin:0;
     transition: all 0.25s linear;
@@ -41,6 +41,7 @@ body{
     display: flex;
     flex-wrap: wrap;
     align-content:center;
+    color: ${({theme})=>theme.typeBoxText}
 }
 
 .word{
@@ -53,7 +54,7 @@ body{
 }
 
 .correct{
-    color: green;
+    color: ${({theme})=>theme.title};
 }
 
 .incorrect{
@@ -84,6 +85,10 @@ body{
         75% {border-right-color:black;}
         100% {border-right-color:white;}
     }
+}
+
+.skipped{
+    color: grey;
 }
 
 `;
