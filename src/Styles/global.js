@@ -91,4 +91,40 @@ body{
     color: grey;
 }
 
+.footer{
+    display:flex;
+    justify-content: space-between;
+    width: 1000px;
+    margin-left:auto;
+    margin-right:auto;
+}
+
+.stats-box{
+    display: flex;
+    max-width: 1000px;
+    height: auto;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.left-stats{
+    width: 30%;
+    padding: 30px;
+}
+
+.right-stats{
+    width: 70%;
+}
+
+.title{
+    font-size: 20px;
+    color: ${({theme})=>theme.typeBoxText};
+}
+
+.subtitle{
+    font-size: 30px;
+    color: ${({theme})=>theme.title};
+}
+
+
 `;
