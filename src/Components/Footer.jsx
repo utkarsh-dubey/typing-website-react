@@ -20,7 +20,10 @@ const Footer = () => {
     <div className='footer'>
 
       <div className="links">
-          <GitHubIcon style={{marginRight:'4px'}}/>
+        <a href='https://google.com'>
+        <GitHubIcon style={{marginRight:'4px'}}/>
+        </a>
+          
           <LinkedInIcon/>
       </div>
 

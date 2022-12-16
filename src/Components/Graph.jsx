@@ -10,6 +10,7 @@ import {
     Tooltip,
     Legend
 } from 'chart.js'
+import { useTheme } from '../Context/ThemeContext';
 
 ChartJS.register(
     CategoryScale,
@@ -21,23 +22,21 @@ ChartJS.register(
     Legend
 );
 
-const Graph = () => {
+const Graph = ({graphData}) => {
+
+    const {theme} = useTheme();
+
   return (
     <div>
         <Line 
             data={
                 {
-                    labels: [1,2,3,4,5],
+                    labels: graphData.map(i=>i[0]+1),
                     datasets: [
                         {
-                            data: [6,7,8,9,10],
-                            label: 'random data',
-                            borderColor: 'gold'
-                        },
-                        {
-                            data: [10,9,8,7,6],
-                            label: 'random data2',
-                            borderColor: 'green'
+                            data: graphData.map(i=>i[1]),
+                            label: 'wpm',
+                            borderColor: theme.title
                         }
                     ]
                 }

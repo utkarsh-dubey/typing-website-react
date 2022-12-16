@@ -1,11 +1,15 @@
 import { wordsList } from 'random-words';
 import React, { createRef, useEffect, useRef, useState } from 'react'
+import { useTestMode } from '../Context/TestModeContext';
 import Stats from './Stats';
+import UpperMenu from './UpperMenu';
 
 const TypingBox = ({words}) => {
 
     // in react you get a hook , useRef()
     // react also provides a function, createRef() 
+
+    const {testSeconds} = useTestMode();
 
     const [currCharIndex, setCurrCharIndex] = useState(0);
     const [currWordIndex, setCurrWordIndex] = useState(0);
@@ -16,6 +20,7 @@ const TypingBox = ({words}) => {
     const [incorrectChars, setIncorrectChar] = useState(0);
     const [missedChars, setMissedChars] = useState(0);
     const [extraChars, setExtraChars] = useState(0);
+    const [graphData, setGraphData] = useState([]);
     const [testStart, setTestStart] = useState(false);
     const [testEnd, setTestEnd] = useState(false);
 
@@ -27,8 +32,18 @@ const TypingBox = ({words}) => {
         const intervalId = setInterval(timer, 1000);
 
         function timer(){
-            console.log("timer function is working");
+            // console.log("timer function is working");
             setCountDown((prevCountDown)=>{
+
+                setCorrectChars((correctChars)=>{
+                    // console.log("correct chars",correctChars);
+                    setGraphData((data)=>{
+                        return [...data, [testTime-prevCountDown,Math.round((correctChars/5)/((testTime-prevCountDown+1)/60))]];
+                    });
+                    return correctChars;
+                });
+
+
                 if(prevCountDown===1){
                     setTestEnd(true);
                     clearInterval(intervalId);
@@ -163,21 +178,27 @@ const TypingBox = ({words}) => {
         wordSpanRef[0].current.childNodes[0].className = 'char current';
     },[]);
 
+    useEffect(()=>{
+        setCountDown(testSeconds);
+        setTestTime(testSeconds);
+    },[testSeconds])
 
 
   return (
     <div>
           
-              {countDown}
+            <UpperMenu countDown={countDown}/>
               {(testEnd) ? (<Stats 
                                 wpm={calculateWPM()} 
                                 accuracy={calculateAccuracy()} 
                                 correctChars={correctChars} 
                                 incorrectChars={incorrectChars}
                                 missedChars={missedChars} 
-                                extraChars={extraChars}/>) :
+                                extraChars={extraChars}
+                                graphData={graphData}/>) :
                   (
                     <div className="type-box" onClick={focusInput}>
+                      
                       <div className="words">
                           {words.map((word, index) => (
                               <span className='word' ref={wordSpanRef[index]}>
