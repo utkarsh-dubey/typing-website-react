@@ -180,9 +180,9 @@ const TypingBox = ({words}) => {
                     <div className="type-box" onClick={focusInput}>
                       <div className="words">
                           {words.map((word, index) => (
-                              <span className='word' ref={wordSpanRef[index]} key={index}>
+                              <span className='word' ref={wordSpanRef[index]}>
                                   {word.split('').map((char, ind) => (
-                                      <span className='char' key={ind}>{char}</span>
+                                      <span className='char'>{char}</span>
                                   ))}
                               </span>
                           ))}
