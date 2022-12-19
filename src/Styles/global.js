@@ -152,4 +152,11 @@ a{
     cursor: pointer;
 }
 
+.header{
+    display: flex;
+    width: 1000px;
+    margin-left: auto;
+    margin-right: auto;
+    justify-content: space-between;
+}
 `;

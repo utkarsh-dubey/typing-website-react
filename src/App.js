@@ -4,6 +4,8 @@ import Footer from "./Components/Footer";
 import TypingBox from "./Components/TypingBox";
 import { useTheme } from "./Context/ThemeContext";
 import { GlobalStyles } from "./Styles/global";
+import { auth } from "./firebaseConfig";
+import Header from "./Components/Header";
 
 var randomWords =  require('random-words');
 
@@ -11,6 +13,8 @@ function App() {
 
   const {theme} = useTheme();
   const words = randomWords(100);
+  console.log(auth);
+  // console.log(process.env);
 
   // useEffect(()=>{
   //   console.log("theme in app", theme);
@@ -21,7 +25,7 @@ function App() {
     <ThemeProvider theme={theme}>
       <div className="canvas">
         <GlobalStyles/>
-        <h1>Typing Test</h1>
+        <Header/>
         <TypingBox words={words}/>
         <Footer/>
       </div>
