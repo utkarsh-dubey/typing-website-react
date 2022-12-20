@@ -1,10 +1,15 @@
 import React, { useState } from 'react'
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
-import { AppBar, Modal, Tab, Tabs } from '@mui/material';
+import { Alert, AppBar, Box, Modal, Tab, Tabs } from '@mui/material';
 import { makeStyles } from '@material-ui/core';
 import LoginForm from './LoginForm';
 import SignupForm from './SignupForm';
-
+import GoogleButton from 'react-google-button';
+import {signInWithPopup, GoogleAuthProvider} from 'firebase/auth';
+import { auth } from '../firebaseConfig';
+import {useAuthState} from 'react-firebase-hooks/auth';
+import LogoutIcon from '@mui/icons-material/Logout';
+import { useNavigate } from 'react-router-dom';
 const useStyles = makeStyles(()=>({
     modal: {
         display: 'flex',
@@ -13,7 +18,8 @@ const useStyles = makeStyles(()=>({
         backdropFilter: 'blur(2px)'
     },
     box: {
-        width: 400
+        width: 400,
+        textAlign: 'center'
     }
 }))
 
@@ -21,7 +27,8 @@ const useStyles = makeStyles(()=>({
 const AccountIcon = () => {
     const [open, setOpen] = useState(false);
     const [value, setValue] = useState(0);
-    
+    const [user] = useAuthState(auth);
+    console.log("user", user);
     const handleClose = ()=>{
         setOpen(false);
     }
@@ -30,8 +37,37 @@ const AccountIcon = () => {
         setValue(v);
     }  
 
+    const navigate = useNavigate();
+
     const handleOpen = ()=>{
-        setOpen(true);
+        if(user){
+            //routing because user is logged in;
+            navigate('/user');
+        }
+        else{
+            //no user, so open login/signup form
+            setOpen(true);
+        }
+    }
+
+    const logout = ()=>{
+        auth.signOut().then((response)=>{
+            alert("logged out");
+        }).catch((err)=>{
+            console.log(err);
+        });
+    }
+
+    const googleProvider = new GoogleAuthProvider();
+    const signInWithGoogle = ()=>{
+        
+        signInWithPopup(auth,googleProvider).then((response)=>{
+            alert('login successful');
+            handleClose();
+        }).catch((err)=>{
+            console.log('login failed',err);
+        });
+
     }
 
     const classes = useStyles();
@@ -41,6 +77,7 @@ const AccountIcon = () => {
   return (
     <div>
         <AccountCircleIcon onClick={handleOpen}/>
+        {(user) && <LogoutIcon onClick={logout}/>}
 
         <Modal 
             open={open}
@@ -59,8 +96,16 @@ const AccountIcon = () => {
                         <Tab label='signup'></Tab>
                     </Tabs>
                 </AppBar>
-                {value===0 && <LoginForm/>}
-                {value===1 && <SignupForm/>}
+                {value===0 && <LoginForm handleClose={handleClose}/>}
+                {value===1 && <SignupForm handleClose={handleClose}/>}
+
+                <Box>
+                    <span>OR</span>
+                    <GoogleButton
+                        style={{width:'100%',marginTop:'8px'}}
+                        onClick={signInWithGoogle}
+                    />
+                </Box>
             </div>
         </Modal>
     </div>
