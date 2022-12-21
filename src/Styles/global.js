@@ -159,4 +159,13 @@ a{
     margin-right: auto;
     justify-content: space-between;
 }
+
+.github-button{
+    width: 400px;
+    text-align: center;
+    background: blue;
+    height: 3rem;
+    border: 2px solid;
+    border-radius: 10px;
+}
 `;

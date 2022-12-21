@@ -1,27 +1,45 @@
 import { Box, Button, TextField } from '@mui/material'
 import React, { useState } from 'react'
 import { auth } from '../firebaseConfig';
+import { useAlert } from '../Context/AlertContext';
 
 const SignupForm = ({handleClose}) => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [confirmPassword, setConfirmPassword] = useState('');
-
+    const {setAlert} = useAlert();
     const handleSubmit = ()=>{
         if(!email || !password || !confirmPassword){
-            alert("Fill all details");
+            setAlert({
+                open: true,
+                type: 'warning',
+                message: 'fill all details'
+            });
             return;
         }
         if(password!==confirmPassword){
-            alert("Password Mismatch");
+            setAlert({
+                open: true,
+                type: 'warning',
+                message: 'Password Mismatch'
+            });
             return
         }
         
         auth.createUserWithEmailAndPassword(email, password).then((response)=>{
-            alert("signup successful");
+            setAlert({
+                open: true,
+                type: 'success',
+                message: 'account created!'
+            });
             handleClose();
         }).catch((err)=>{
             console.log("sign up failed",err);
+            setAlert({
+                open: true,
+                type: 'error',
+                message: 'not able to create account'
+            });
         });
     }
 

@@ -9,12 +9,14 @@ import Header from "./Components/Header";
 import { Route, Routes } from "react-router-dom";
 import HomePage from "./Pages/HomePage";
 import UserPage from "./Pages/UserPage";
+import Alert from "./Components/Alert";
 
 function App() {
 
 
   return (
     <>
+      <Alert/>
       <Routes>
         <Route path='/' element={<HomePage/>}   />
         <Route path='/user' element={<UserPage/>} />

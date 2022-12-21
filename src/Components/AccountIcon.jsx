@@ -5,11 +5,12 @@ import { makeStyles } from '@material-ui/core';
 import LoginForm from './LoginForm';
 import SignupForm from './SignupForm';
 import GoogleButton from 'react-google-button';
-import {signInWithPopup, GoogleAuthProvider} from 'firebase/auth';
+import {signInWithPopup, GoogleAuthProvider, GithubAuthProvider} from 'firebase/auth';
 import { auth } from '../firebaseConfig';
 import {useAuthState} from 'react-firebase-hooks/auth';
 import LogoutIcon from '@mui/icons-material/Logout';
 import { useNavigate } from 'react-router-dom';
+import { useAlert } from '../Context/AlertContext';
 const useStyles = makeStyles(()=>({
     modal: {
         display: 'flex',
@@ -28,6 +29,7 @@ const AccountIcon = () => {
     const [open, setOpen] = useState(false);
     const [value, setValue] = useState(0);
     const [user] = useAuthState(auth);
+    const {setAlert} = useAlert();
     console.log("user", user);
     const handleClose = ()=>{
         setOpen(false);
@@ -52,9 +54,18 @@ const AccountIcon = () => {
 
     const logout = ()=>{
         auth.signOut().then((response)=>{
-            alert("logged out");
+            setAlert({
+                open: true,
+                type: 'success',
+                message: 'logged out'
+            });
         }).catch((err)=>{
             console.log(err);
+            setAlert({
+                open: true,
+                type: 'error',
+                message: 'not able to logout'
+            });
         });
     }
 
@@ -62,12 +73,37 @@ const AccountIcon = () => {
     const signInWithGoogle = ()=>{
         
         signInWithPopup(auth,googleProvider).then((response)=>{
-            alert('login successful');
+            setAlert({
+                open: true,
+                type: 'success',
+                message: 'login successful'
+            });
             handleClose();
         }).catch((err)=>{
-            console.log('login failed',err);
+            setAlert({
+                open: true,
+                type: 'error',
+                message: 'google auth is not working'
+            });
         });
+    }
 
+    const githubProvider = new GithubAuthProvider();
+    const signInWithGithub = ()=>{
+        signInWithPopup(auth, githubProvider).then((response)=>{
+            setAlert({
+                open: true,
+                type: 'success',
+                message: 'login successful'
+            });
+        }).catch((err)=>{
+            console.log("err",err);
+            setAlert({
+                open: true,
+                type: 'error',
+                message: 'github auth is not working'
+            });
+        });
     }
 
     const classes = useStyles();
@@ -105,6 +141,12 @@ const AccountIcon = () => {
                         style={{width:'100%',marginTop:'8px'}}
                         onClick={signInWithGoogle}
                     />
+                </Box>
+                <Box>
+                    <span>OR</span>
+                    <div className='github-button' onClick={signInWithGithub}>
+                        Login with Github
+                    </div>
                 </Box>
             </div>
         </Modal>

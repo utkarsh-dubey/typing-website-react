@@ -1,5 +1,8 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import Graph from './Graph'
+import { db, auth } from '../firebaseConfig';
+import { useAlert } from '../Context/AlertContext';
+import { useAuthState } from 'react-firebase-hooks/auth';
 
 const Stats = ({wpm, accuracy, correctChars, incorrectChars, missedChars, extraChars,graphData}) => {
     // console.log(graphData);
@@ -7,13 +10,52 @@ const Stats = ({wpm, accuracy, correctChars, incorrectChars, missedChars, extraC
     var timeSet = new Set();  //store unique values of time
     // has(value) -> true or false , constant time
     // add(value) -> adds the value in set
-
+    const {setAlert} = useAlert();
     const newGraph = graphData.filter((i)=>{
         if(!timeSet.has(i[0])){
             timeSet.add(i[0]);
             return i;
         }
     });
+
+    const [user] = useAuthState(auth);
+
+    const pushResultToDatabase = ()=>{
+        const resultsRef = db.collection('Results');
+        const {uid} = auth.currentUser;
+        resultsRef.add({
+            wpm: wpm,
+            accuracy: accuracy,
+            characters: `${correctChars}/${incorrectChars}/${missedChars}/${extraChars}`,
+            userID: uid,
+            timeStamp: new Date()
+        }).then((response)=>{
+            setAlert({
+                open: true,
+                type: 'success',
+                message: 'result saved to db'
+            });
+        });
+    }
+
+    useEffect(()=>{
+
+        if(user){
+            //saving because user is logged in;
+            pushResultToDatabase();
+        }
+        else{
+            //no user, no save
+            setAlert({
+                open: true,
+                type: 'warning',
+                message: 'login to save results'
+            });
+        }
+        
+    },[]);
+
+
     // console.log(graphData,newGraph);
   return (
     <div className="stats-box">
