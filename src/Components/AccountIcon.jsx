@@ -11,6 +11,7 @@ import {useAuthState} from 'react-firebase-hooks/auth';
 import LogoutIcon from '@mui/icons-material/Logout';
 import { useNavigate } from 'react-router-dom';
 import { useAlert } from '../Context/AlertContext';
+import { useTheme } from '../Context/ThemeContext';
 const useStyles = makeStyles(()=>({
     modal: {
         display: 'flex',
@@ -105,7 +106,7 @@ const AccountIcon = () => {
             });
         });
     }
-
+    const {theme} = useTheme();
     const classes = useStyles();
     console.log(classes);
     console.log(value);
@@ -128,8 +129,8 @@ const AccountIcon = () => {
                         onChange={handleValueChange}
                         variant='fullWidth'
                     >
-                        <Tab label='login'></Tab>
-                        <Tab label='signup'></Tab>
+                        <Tab label='login' style={{color: theme.title}}></Tab>
+                        <Tab label='signup' style={{color: theme.title}}></Tab>
                     </Tabs>
                 </AppBar>
                 {value===0 && <LoginForm handleClose={handleClose}/>}
@@ -142,12 +143,12 @@ const AccountIcon = () => {
                         onClick={signInWithGoogle}
                     />
                 </Box>
-                <Box>
+                {/* <Box>
                     <span>OR</span>
                     <div className='github-button' onClick={signInWithGithub}>
                         Login with Github
                     </div>
-                </Box>
+                </Box> */}
             </div>
         </Modal>
     </div>

@@ -13,15 +13,17 @@ import Alert from "./Components/Alert";
 
 function App() {
 
+  const {theme} = useTheme();
 
   return (
-    <>
+    <ThemeProvider theme={theme}>
+      <GlobalStyles/>
       <Alert/>
       <Routes>
         <Route path='/' element={<HomePage/>}   />
         <Route path='/user' element={<UserPage/>} />
       </Routes>
-    </>
+    </ThemeProvider>
   );
 }
 

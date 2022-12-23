@@ -2,12 +2,15 @@ import { Box, Button, TextField } from '@mui/material'
 import React, { useState } from 'react'
 import { auth } from '../firebaseConfig';
 import { useAlert } from '../Context/AlertContext';
+import { useTheme } from '../Context/ThemeContext';
+import errorMapping from '../Utils/errorMapping';
 
 const SignupForm = ({handleClose}) => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [confirmPassword, setConfirmPassword] = useState('');
     const {setAlert} = useAlert();
+    const {theme} = useTheme();
     const handleSubmit = ()=>{
         if(!email || !password || !confirmPassword){
             setAlert({
@@ -38,7 +41,7 @@ const SignupForm = ({handleClose}) => {
             setAlert({
                 open: true,
                 type: 'error',
-                message: 'not able to create account'
+                message: errorMapping[err.code] || "Some error occured"
             });
         });
     }
@@ -52,25 +55,70 @@ const SignupForm = ({handleClose}) => {
             gap:'20px'
         }}
     >
-        
+        <TextField
+            type='text'
+            variant='outlined'
+            label='Enter Username'
+            InputLabelProps={{
+                style: {
+                    color: theme.title
+                }
+            }}
+            InputProps={{
+                style: {
+                    color: theme.title
+                }
+            }}
+            onChange={(e)=>setEmail(e.target.value)}/>
         <TextField
             type='email'
             variant='outlined'
             label='Enter Email'
+            InputLabelProps={{
+                style: {
+                    color: theme.title
+                }
+            }}
+            InputProps={{
+                style: {
+                    color: theme.title
+                }
+            }}
             onChange={(e)=>setEmail(e.target.value)}/>
         <TextField
             type='password'
             variant='outlined'
             label='Enter Password'
+            InputLabelProps={{
+                style: {
+                    color: theme.title
+                }
+            }}
+            InputProps={{
+                style: {
+                    color: theme.title
+                }
+            }}
             onChange={(e)=>setPassword(e.target.value)}/>
         <TextField
             type='password'
             variant='outlined'
             label='Enter Confirm Password'
+            InputLabelProps={{
+                style: {
+                    color: theme.title
+                }
+            }}
+            InputProps={{
+                style: {
+                    color: theme.title
+                }
+            }}
             onChange={(e)=>setConfirmPassword(e.target.value)}/>
         <Button
             variant='contained'
             size='large'
+            style={{backgroundColor: theme.title, color: theme.background}}
             onClick={handleSubmit}>
                 Signup
         </Button>

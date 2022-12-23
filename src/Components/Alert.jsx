@@ -20,7 +20,7 @@ const Alert2 = () => {
     <div>   
         <Snackbar
             open={alert.open} 
-            autoHideDuration={1000} 
+            autoHideDuration={2000} 
             onClose={handleClose}
             anchorOrigin={
                 {

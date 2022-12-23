@@ -13,6 +13,11 @@ body{
     padding:0;
     margin:0;
     transition: all 0.25s linear;
+    overflow-y: scroll;
+}
+
+body::-webkit-scrollbar{
+    display: none;
 }
 
 .canvas{
@@ -167,5 +172,57 @@ a{
     height: 3rem;
     border: 2px solid;
     border-radius: 10px;
+}
+
+.user-profile{
+    width: 1000px;
+    margin: auto;
+    display: flex;
+    min-height: 15rem;
+    background: ${({theme})=>theme.typeBoxText};
+    border-radius: 20px;
+    justify-content: center;
+    align-text: center;
+}
+
+.user{
+    width: 50%;
+    display: flex;
+    margin-top: 30px;
+    margin-bottom: 30px;
+    font-size: 1.5rem;
+    padding: 1rem;
+    border-right: 2px solid;
+}
+
+.info{
+    width: 60%;
+    padding: 1rem;
+    margin-top: 1rem;
+}
+.picture{
+    width: 40%;
+}
+
+.total-tests{
+    width: 50%;
+    font-size: 3rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.graph, .table{
+    width: 1000px;
+    margin: auto;
+}
+
+.center-of-screen{
+    display:flex;
+    min-height:100vh;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    font-size: 3rem;
 }
 `;

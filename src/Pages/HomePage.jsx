@@ -10,19 +10,16 @@ import Header from "../Components/Header";
 var randomWords =  require('random-words');
 
 const HomePage = () => {
-
-    const {theme} = useTheme();
+  
     const words = randomWords(100);
 
   return (
-    <ThemeProvider theme={theme}>
+   
       <div className="canvas">
-        <GlobalStyles/>
         <Header/>
         <TypingBox words={words}/>
         <Footer/>
       </div>
-    </ThemeProvider>
   );
 }
 

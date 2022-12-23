@@ -7,7 +7,7 @@ const Header = () => {
         <div className="logo">
             LOGO
         </div>
-        <div className="user-profile">
+        <div className="user-logo">
             <AccountIcon/>
         </div>
     </div>

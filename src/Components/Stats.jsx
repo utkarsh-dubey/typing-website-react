@@ -23,19 +23,29 @@ const Stats = ({wpm, accuracy, correctChars, incorrectChars, missedChars, extraC
     const pushResultToDatabase = ()=>{
         const resultsRef = db.collection('Results');
         const {uid} = auth.currentUser;
-        resultsRef.add({
-            wpm: wpm,
-            accuracy: accuracy,
-            characters: `${correctChars}/${incorrectChars}/${missedChars}/${extraChars}`,
-            userID: uid,
-            timeStamp: new Date()
-        }).then((response)=>{
+        if(!isNaN(accuracy)){
+            resultsRef.add({
+                wpm: wpm,
+                accuracy: accuracy,
+                characters: `${correctChars}/${incorrectChars}/${missedChars}/${extraChars}`,
+                userID: uid,
+                timeStamp: new Date()
+            }).then((response)=>{
+                setAlert({
+                    open: true,
+                    type: 'success',
+                    message: 'result saved to db'
+                });
+            });
+        }
+        else{
             setAlert({
                 open: true,
-                type: 'success',
-                message: 'result saved to db'
+                type: 'error',
+                message: 'invalid test'
             });
-        });
+        }
+        
     }
 
     useEffect(()=>{
