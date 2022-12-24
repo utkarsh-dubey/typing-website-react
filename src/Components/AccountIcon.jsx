@@ -6,7 +6,7 @@ import LoginForm from './LoginForm';
 import SignupForm from './SignupForm';
 import GoogleButton from 'react-google-button';
 import {signInWithPopup, GoogleAuthProvider, GithubAuthProvider} from 'firebase/auth';
-import { auth } from '../firebaseConfig';
+import { auth, db } from '../firebaseConfig';
 import {useAuthState} from 'react-firebase-hooks/auth';
 import LogoutIcon from '@mui/icons-material/Logout';
 import { useNavigate } from 'react-router-dom';
@@ -72,8 +72,11 @@ const AccountIcon = () => {
 
     const googleProvider = new GoogleAuthProvider();
     const signInWithGoogle = ()=>{
-        
-        signInWithPopup(auth,googleProvider).then((response)=>{
+        signInWithPopup(auth,googleProvider).then(async(response)=>{
+            const username = response.user.email;
+            const ref= await db.collection('usernames').doc(username).set({
+                uid: response.user.uid
+            });
             setAlert({
                 open: true,
                 type: 'success',
@@ -91,7 +94,11 @@ const AccountIcon = () => {
 
     const githubProvider = new GithubAuthProvider();
     const signInWithGithub = ()=>{
-        signInWithPopup(auth, githubProvider).then((response)=>{
+        signInWithPopup(auth, githubProvider).then(async(response)=>{
+            const username = response.user.email.split('@')[0];
+            const ref= await db.collection('usernames').doc(username).set({
+                uid: response.user.uid
+            });
             setAlert({
                 open: true,
                 type: 'success',

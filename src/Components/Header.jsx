@@ -1,11 +1,18 @@
 import React from 'react'
 import AccountIcon from './AccountIcon'
+import CompareButton from './CompareButton'
 
 const Header = () => {
   return (
     <div className="header">
         <div className="logo">
-            LOGO
+            <span>
+              LOGO
+            </span>
+            <div>
+              <CompareButton/>
+            </div>
+            
         </div>
         <div className="user-logo">
             <AccountIcon/>

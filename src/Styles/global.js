@@ -225,4 +225,18 @@ a{
     text-align: center;
     font-size: 3rem;
 }
+
+.logo{
+    display: flex;
+    gap: 10px;
+}
+
+.compare-btn{
+    cursor: pointer;
+    color: ${({theme})=>theme.background};
+    background: ${({theme})=>theme.title};
+    padding: 0.3rem;
+    border-radius: 5px;
+    margin-top: -5px;
+}
 `;
