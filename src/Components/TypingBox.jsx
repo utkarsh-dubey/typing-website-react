@@ -1,13 +1,23 @@
 import { wordsList } from 'random-words';
-import React, { createRef, useEffect, useRef, useState } from 'react'
+import React, { createRef, useEffect, useMemo, useRef, useState } from 'react'
 import { useTestMode } from '../Context/TestModeContext';
 import Stats from './Stats';
 import UpperMenu from './UpperMenu';
+import { Dialog, DialogTitle } from '@material-ui/core';
+var randomWords = require('random-words');
 
-const TypingBox = ({words}) => {
+const TypingBox = () => {
 
     // in react you get a hook , useRef()
     // react also provides a function, createRef() 
+
+    const [wordsArray, setWordsArray] = useState(()=>{
+        return randomWords(300);
+    });
+
+    const words = useMemo(()=>{
+        return wordsArray;
+    },[wordsArray]);
 
     const {testSeconds} = useTestMode();
 
@@ -23,14 +33,57 @@ const TypingBox = ({words}) => {
     const [graphData, setGraphData] = useState([]);
     const [testStart, setTestStart] = useState(false);
     const [testEnd, setTestEnd] = useState(false);
+    const [intervalId, setIntervalId] = useState(null);
+    const [open, setOpen] = useState(false);
 
     const inputRef = useRef(null);
-    const wordSpanRef = Array(words.length).fill(0).map(i=>createRef(null));
+    const wordSpanRef = useMemo(()=>{
+        return Array(words.length).fill(0).map(i=>createRef(null));
+    },[words]);
+
+
+    const resetTest = ()=>{
+        setCurrCharIndex(0);
+        setCurrWordIndex(0);
+        setTestStart(false);
+        setTestEnd(false);
+        clearInterval(intervalId);
+        setCountDown(testSeconds);
+        setTestTime(testSeconds);
+        setWordsArray(randomWords(300));
+        setGraphData([]);
+        setCorrectChars(0);
+        setCorrectWords(0);
+        setExtraChars(0);
+        setIncorrectChar(0);
+        setMissedChars(0);
+        resetWordSpanRefClassname();
+        focusInput();
+    }
+
+    const redoTest = ()=>{
+        setCurrCharIndex(0);
+        setCurrWordIndex(0);
+        setTestStart(false);
+        setTestEnd(false);
+        clearInterval(intervalId);
+        setCountDown(testSeconds);
+        setTestTime(testSeconds);
+        setGraphData([]);
+        setCorrectChars(0);
+        setCorrectWords(0);
+        setExtraChars(0);
+        setIncorrectChar(0);
+        setMissedChars(0);
+        resetWordSpanRefClassname();
+        focusInput();
+    }
+
 
     const startTimer = ()=>{
         
         const intervalId = setInterval(timer, 1000);
-
+        setIntervalId(intervalId);
         function timer(){
             // console.log("timer function is working");
             setCountDown((prevCountDown)=>{
@@ -58,9 +111,26 @@ const TypingBox = ({words}) => {
 
 
     const handleKeyDown = (e)=>{
+
+        console.log(e);
+        if(e.keyCode===9){
+            if(testStart){
+                clearInterval(intervalId);
+            }
+            e.preventDefault();
+            setOpen(true);
+            return;
+        }
         
+
+
         let allChildSpans = wordSpanRef[currWordIndex].current.childNodes;
         
+        if(e.keyCode!==8 && e.key.length>1){
+            e.preventDefault();
+            return;
+        }
+
         if(!testStart){
             startTimer();
             setTestStart(true);
@@ -88,6 +158,12 @@ const TypingBox = ({words}) => {
                 allChildSpans[currCharIndex].className = allChildSpans[currCharIndex].className.replace('current','');
 
             }
+
+            //scrollinig line condition
+            if(wordSpanRef[currWordIndex+1].current.offsetLeft < wordSpanRef[currWordIndex].current.offsetLeft){
+                wordSpanRef[currWordIndex].current.scrollIntoView();
+            }
+
 
             wordSpanRef[currWordIndex+1].current.childNodes[0].className = 'char current';
             setCurrWordIndex(currWordIndex+1);
@@ -160,6 +236,37 @@ const TypingBox = ({words}) => {
 
     }
 
+    const handleDialogBoxEvents = (e)=>{
+
+        if(e.keyCode===32){
+            //logic for redo game
+            e.preventDefault();
+            redoTest();
+            setOpen(false);
+            return;
+        }
+        if(e.keyCode===9 || e.keyCode===13){
+            //logic for reset game
+            e.preventDefault();
+            resetTest();
+            setOpen(false);
+            return;
+        }
+
+        e.preventDefault();
+        setOpen(false);
+        startTimer();
+    }
+
+    const resetWordSpanRefClassname = ()=>{
+        wordSpanRef.map(i=>{
+            Array.from(i.current.childNodes).map(j=>{
+                j.className = 'char'
+            });
+        });
+        wordSpanRef[0].current.childNodes[0].className = 'char current';
+    }
+
     const calculateWPM = ()=>{
         return Math.round((correctChars/5)/(testTime/60))
     }
@@ -179,9 +286,8 @@ const TypingBox = ({words}) => {
     },[]);
 
     useEffect(()=>{
-        setCountDown(testSeconds);
-        setTestTime(testSeconds);
-    },[testSeconds])
+        resetTest();
+    },[testSeconds]);
 
 
   return (
@@ -219,6 +325,26 @@ const TypingBox = ({words}) => {
             ref={inputRef}
             onKeyDown={(e)=>handleKeyDown(e)}
         />
+
+        <Dialog 
+            open={open}
+            style={{
+                backdropFilter: 'blur(2px)'
+            }}
+            PaperProps={{
+                style: {
+                    backgroundColor:'transparent',
+                    boxShadow: 'none'
+                }
+            }}
+            onKeyDown={handleDialogBoxEvents}
+            >
+            <DialogTitle>
+                <div className="instruction">press SPACE to redo</div>
+                <div className="instruction">press TAB/ENTER to restart</div>
+                <div className="instruction">press any other key to exit</div>
+            </DialogTitle>
+        </Dialog>
     </div>
   )
 }

@@ -26,7 +26,7 @@ body::-webkit-scrollbar{
     grid-auto-flow: row;
     grid-template-row: auto 1fr auto;
     gap: 0.5rem;
-    padding:1rem;
+    padding:2rem;
     width:100vw;
     text-align: center;
     align-items: center;
@@ -98,10 +98,16 @@ body::-webkit-scrollbar{
 
 .footer{
     display:flex;
-    justify-content: space-between;
+    flex-direction: column;
+    align-self: end;
     width: 1000px;
     margin-left:auto;
     margin-right:auto;
+}
+
+.actual-footer{
+    display: flex;
+    justify-content: space-between;
 }
 
 .stats-box{
@@ -160,6 +166,7 @@ a{
 .header{
     display: flex;
     width: 1000px;
+    align-self: stretch;
     margin-left: auto;
     margin-right: auto;
     justify-content: space-between;
@@ -238,5 +245,18 @@ a{
     padding: 0.3rem;
     border-radius: 5px;
     margin-top: -5px;
+}
+
+.instruction{
+    color: ${({theme})=>theme.title};
+}
+
+.hint{
+    kbd{
+        background: ${({theme})=>theme.title};
+        color: ${({theme})=>theme.background};
+        padding: 2.5px 5px;
+        border-radius: 4px; 
+    }
 }
 `;
