@@ -11,7 +11,12 @@ const TypingBox = () => {
     // in react you get a hook , useRef()
     // react also provides a function, createRef() 
 
+    const {testSeconds, testWords, testMode} = useTestMode();
+
     const [wordsArray, setWordsArray] = useState(()=>{
+        if(testMode==='word'){
+            return randomWords(testWords);
+        }
         return randomWords(300);
     });
 
@@ -19,12 +24,24 @@ const TypingBox = () => {
         return wordsArray;
     },[wordsArray]);
 
-    const {testSeconds} = useTestMode();
+    
 
     const [currCharIndex, setCurrCharIndex] = useState(0);
     const [currWordIndex, setCurrWordIndex] = useState(0);
-    const [countDown, setCountDown] = useState(15);
-    const [testTime, setTestTime] = useState(15);
+    const [countDown, setCountDown] = useState(()=>{
+        if(testMode==='word'){
+            return 180;
+        }
+
+        return testSeconds
+    });
+    const [testTime, setTestTime] = useState(()=>{
+        if(testMode==='word'){
+            return 180;
+        }
+
+        return testSeconds
+    });
     const [correctChars, setCorrectChars] = useState(0);
     const [correctWords, setCorrectWords] = useState(0);
     const [incorrectChars, setIncorrectChar] = useState(0);
@@ -48,9 +65,17 @@ const TypingBox = () => {
         setTestStart(false);
         setTestEnd(false);
         clearInterval(intervalId);
-        setCountDown(testSeconds);
-        setTestTime(testSeconds);
-        setWordsArray(randomWords(300));
+        
+        if(testMode==='word'){
+            setWordsArray(randomWords(testWords));
+            setCountDown(180);
+            setTestTime(180);
+        }
+        else{
+            setWordsArray(randomWords(300));
+            setCountDown(testSeconds);
+            setTestTime(testSeconds);
+        }
         setGraphData([]);
         setCorrectChars(0);
         setCorrectWords(0);
@@ -67,8 +92,14 @@ const TypingBox = () => {
         setTestStart(false);
         setTestEnd(false);
         clearInterval(intervalId);
-        setCountDown(testSeconds);
-        setTestTime(testSeconds);
+        if(testMode==='word'){
+            setCountDown(180);
+            setTestTime(180);
+        }
+        else{
+            setCountDown(testSeconds);
+            setTestTime(testSeconds);
+        }
         setGraphData([]);
         setCorrectChars(0);
         setCorrectWords(0);
@@ -138,6 +169,14 @@ const TypingBox = () => {
 
         //logic for space press -> increase my currWordIndex by 1
         if(e.keyCode===32){
+
+            if(currWordIndex===wordsArray.length-1){
+                clearInterval(intervalId);
+                setCurrWordIndex(currWordIndex+1);
+                setTestEnd(true);
+                return;
+            }
+
 
             const correctChars = wordSpanRef[currWordIndex].current.querySelectorAll('.correct');
 
@@ -220,6 +259,12 @@ const TypingBox = () => {
         if(e.key===allChildSpans[currCharIndex].innerText){
             allChildSpans[currCharIndex].className = 'char correct';
             setCorrectChars(correctChars+1);
+            if(currWordIndex===wordsArray.length-1 && currCharIndex===allChildSpans.length-1){
+                clearInterval(intervalId);
+                setCurrWordIndex(currWordIndex+1);
+                setTestEnd(true);
+                return;
+            }
         }
         else{
             allChildSpans[currCharIndex].className = 'char incorrect';
@@ -268,7 +313,7 @@ const TypingBox = () => {
     }
 
     const calculateWPM = ()=>{
-        return Math.round((correctChars/5)/(testTime/60))
+        return Math.round((correctChars/5)/((graphData[graphData.length-1][0]+1)/60))
     }
 
     const calculateAccuracy = ()=>{
@@ -287,13 +332,13 @@ const TypingBox = () => {
 
     useEffect(()=>{
         resetTest();
-    },[testSeconds]);
+    },[testSeconds, testWords, testMode]);
 
 
   return (
     <div>
           
-            <UpperMenu countDown={countDown}/>
+            <UpperMenu countDown={countDown} currWordIndex={currWordIndex}/>
               {(testEnd) ? (<Stats 
                                 wpm={calculateWPM()} 
                                 accuracy={calculateAccuracy()} 
@@ -301,7 +346,8 @@ const TypingBox = () => {
                                 incorrectChars={incorrectChars}
                                 missedChars={missedChars} 
                                 extraChars={extraChars}
-                                graphData={graphData}/>) :
+                                graphData={graphData}
+                                resetTest={resetTest}/>) :
                   (
                     <div className="type-box" onClick={focusInput}>
                       

@@ -4,7 +4,7 @@ import { db, auth } from '../firebaseConfig';
 import { useAlert } from '../Context/AlertContext';
 import { useAuthState } from 'react-firebase-hooks/auth';
 
-const Stats = ({wpm, accuracy, correctChars, incorrectChars, missedChars, extraChars,graphData}) => {
+const Stats = ({wpm, resetTest, accuracy, correctChars, incorrectChars, missedChars, extraChars,graphData}) => {
     // console.log(graphData);
     // arr= [1,1,2,3,2,2,2,3,3,3,3,4,4,4], set(arr) = [1,2,3,4]
     var timeSet = new Set();  //store unique values of time
@@ -76,6 +76,7 @@ const Stats = ({wpm, accuracy, correctChars, incorrectChars, missedChars, extraC
             <div className="subtitle">{accuracy}%</div>
             <div className="title">Characters</div>
             <div className="subtitle">{correctChars}/{incorrectChars}/{missedChars}/{extraChars}</div>
+            <div className='subtitle' onClick={resetTest}>Restart</div>
         </div>
         <div className="right-stats">
             {/* graph comp will go here */}
