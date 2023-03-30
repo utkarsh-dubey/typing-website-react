@@ -169,6 +169,7 @@ a{
     align-self: stretch;
     margin-left: auto;
     margin-right: auto;
+    height: 80px;
     justify-content: space-between;
 }
 
@@ -236,6 +237,8 @@ a{
 .logo{
     display: flex;
     gap: 10px;
+    justify-content: start;
+    align-items: start;
 }
 
 .compare-btn{
@@ -275,8 +278,9 @@ a{
 
 .logo-image{
     transform: scale(0.3);
-    margin-top: -200px;
+    margin-top: -100px;
     margin-left: -90px;
+    display: block;
 }
 
 .mode{
