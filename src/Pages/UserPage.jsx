@@ -52,6 +52,11 @@ const UserPage = () => {
              </div>);
     }
     
+    if(!loading && !dataLoading && data.length===0){
+        return <div className="center-of-screen">
+            <span>Take some tests then come back!!</span>
+        </div>
+    }
 
   return (
     <div className='canvas'>

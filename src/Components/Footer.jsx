@@ -7,7 +7,7 @@ import LinkedInIcon from '@mui/icons-material/LinkedIn';
 
 const Footer = () => {
 
-    const {setTheme, defaultTheme} = useTheme();
+    const {theme, setTheme, defaultTheme} = useTheme();
 
     const handleThemeChange = (e)=>{
         console.log(e.value);
@@ -27,11 +27,13 @@ const Footer = () => {
 
       <div className="actual-footer">
         <div className="links">
-          <a href='https://google.com'>
+          <a href='https://github.com/utkarsh-dubey' target="_blank">
           <GitHubIcon style={{marginRight:'4px'}}/>
           </a>
+          <a href='https://www.linkedin.com/in/utkarsh2504/' target="_blank">
+          <LinkedInIcon/>
+          </a>
             
-            <LinkedInIcon/>
         </div>
 
         <div className="themes">  
@@ -40,6 +42,19 @@ const Footer = () => {
                 onChange={handleThemeChange}
                 menuPlacement='top'
                 defaultValue={{value:defaultTheme, label: defaultTheme.label}}
+                styles={{
+                  control:  styles => ({...styles, backgroundColor: theme.background}),
+                  menu: styles => ({...styles, backgroundColor: theme.background}),
+                  option: (styles, {isFocused}) => {
+                      return {
+                          ...styles,
+                          backgroundColor: (isFocused)? theme.background : theme.textColor,
+                          color: (isFocused)? theme.textColor : theme.typeBoxText,
+                          cursor: 'pointer'
+                      }
+                  },
+                  singleValue: styles => ({...styles, color: theme.title}),
+              }}
             />
         </div>
       </div>

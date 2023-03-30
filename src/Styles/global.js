@@ -259,4 +259,27 @@ a{
         border-radius: 4px; 
     }
 }
+
+.active{
+    border: 1px solid;
+    padding: 3px;
+    margin: 4px;
+}
+
+.active-value{
+    border: 1px solid;
+    padding: 3px;
+    margin: 4px;
+    margin-top: -4px;
+}
+
+.logo-image{
+    transform: scale(0.3);
+    margin-top: -200px;
+    margin-left: -90px;
+}
+
+.mode{
+    cursor: pointer;
+}
 `;
